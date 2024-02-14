@@ -1,46 +1,49 @@
-# Getting Started with Create React App
+# Blink tech test
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This is a simple react app which consumes a json file (the data for which lives in `/data/data.js`). It has only one page which lets you:
 
-## Available Scripts
+- View the sorted conversations (most recent at top)
+- Select a conversation and see its messages in order (most recent at the bottom)
+- Reply to messages in a conversation by typing in the text box and clicking send or pressing Enter
+- Edit messages by clicking on them, updating the text that appears in the text box and clicking send or pressing Enter. Edited sessages has `Edited` tag
 
-In the project directory, you can run:
+Other functionality:
 
-### `npm start`
+- If a conversation has more messages than its height, the viewbox is automatically scrolled so that the last message is visible
+- This also happens when a new message is added to a conversation
+  
+## Technical considerations
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- `<ul>`, `<li>` and `Form` elements were used for accessibility
+- Context API is used for state management
+- Added `edited` property to `Message` in order to show an edited tag on the message, although this could be improved (see below)
+  
+## Improvements
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+- Instead of adding a boolean `edited` property to `Message`, I could have added a new datetime string property `created_at`. I could have used this as follows
+  - When a `Message` is first created, the `created_at` and `last_updated` are set to the same datetime
+  - If a `Message` is edited, the `last_updated` datetime is updated to current datetime
+  - The `created_at` is used to order the messages so that edits don't cause the message to jump to the bottom of the list
+  - The concept of `edited` can be understood if there's a difference between `created_at` and `last_updated`
+- Due to time constraints, the test cases are limited. Currently it only tests is the context is using the right data. More tests could be added for the functions
+- `handleEditMessage` and `handleSendMessage` functions could be refactored in one function
+  
+## Getting started
 
-### `npm test`
+First you'll need to install your dependencies using yarn.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```sh
+yarn
+```
 
-### `npm run build`
+## Start the app
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```sh
+yarn start
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Running tests
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+```sh
+yarn test
+```
