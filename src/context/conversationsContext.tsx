@@ -7,6 +7,7 @@ interface ConversationContextProps {
   conversations: Conversation[] | null;
   selectedConversation: Conversation | null;
   selectConversation: (id: string) => void;
+  handleSendMessage: (text: string) => void;
 }
 
 interface ConversationProviderProps {
@@ -32,10 +33,38 @@ export const ConversationProvider: React.FC<ConversationProviderProps> = ({
     setSelectedConversation(selectedConversation);
   };
 
+  const handleSendMessage = (messageText: string) => {
+    if (!selectedConversation) return;
+
+    const newMessage = {
+      id: `generated-id-${Date.now()}`,
+      text: messageText,
+      last_updated: new Date().toISOString(),
+    };
+
+    const updatedConversations = (conversations || []).map((conv) =>
+      conv.id === selectedConversation.id
+        ? { ...conv, messages: [...conv.messages, newMessage] }
+        : conv
+    );
+
+    setConversations(updatedConversations);
+
+    setSelectedConversation((prevSelected) =>
+      prevSelected?.id === selectedConversation.id
+        ? {
+            ...prevSelected,
+            messages: [...(prevSelected?.messages || []), newMessage],
+          }
+        : prevSelected
+    );
+  };
+
   const contextValue: ConversationContextProps = {
     conversations,
     selectedConversation,
     selectConversation,
+    handleSendMessage,
   };
 
   return (
