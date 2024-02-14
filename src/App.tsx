@@ -1,8 +1,14 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import logo from "./logo.svg";
+import "./App.css";
+import {
+  ConversationProvider,
+  useConversationContext,
+} from "./context/conversationsContext";
 
 function App() {
+  const { conversations } = useConversationContext();
+  console.log("conversations: ", conversations);
+
   return (
     <div className="App">
       <header className="App-header">
@@ -18,9 +24,18 @@ function App() {
         >
           Learn React
         </a>
+        Data test
       </header>
     </div>
   );
 }
 
-export default App;
+const AppWithProvider: React.FC = () => {
+  return (
+    <ConversationProvider>
+      <App />
+    </ConversationProvider>
+  );
+};
+
+export default AppWithProvider;
