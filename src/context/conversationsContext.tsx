@@ -12,6 +12,7 @@ interface ConversationContextProps {
 
 interface ConversationProviderProps {
   children: ReactNode;
+  testData?: Conversation[] | null; // added for testing purposes
 }
 
 const DataContext = createContext<ConversationContextProps | undefined>(
@@ -20,9 +21,10 @@ const DataContext = createContext<ConversationContextProps | undefined>(
 
 export const ConversationProvider: React.FC<ConversationProviderProps> = ({
   children,
+  testData,
 }) => {
   const [conversations, setConversations] = useState<Conversation[] | null>(
-    sortData(data, "last_updated").reverse()
+    testData ? testData : sortData(data, "last_updated").reverse()
   );
   const [selectedConversation, setSelectedConversation] =
     useState<Conversation | null>(null);
