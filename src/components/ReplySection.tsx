@@ -1,24 +1,41 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useConversationContext } from "../context/conversationsContext";
 import "./ReplySection.css";
 
 const ReplySection = () => {
   const [messageText, setMessageText] = useState<string>("");
+  const [editableMessage, setEditableMessage] = useState<string | null>(null);
 
-  const { handleSendMessage } = useConversationContext();
+  const { handleSendMessage, handleEditMessage, selectedMessage } =
+    useConversationContext();
+
+  useEffect(() => {
+    if (selectedMessage) setEditableMessage(selectedMessage?.text);
+  }, [selectedMessage]);
 
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    handleSendMessage(messageText);
-    setMessageText("");
+    if (editableMessage) {
+      handleEditMessage(editableMessage);
+      setEditableMessage(null);
+    } else {
+      handleSendMessage(messageText);
+      setMessageText("");
+    }
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    editableMessage
+      ? setEditableMessage(e.target.value)
+      : setMessageText(e.target.value);
   };
 
   return (
     <form onSubmit={handleFormSubmit} className="reply-section">
       <input
         type="text"
-        value={messageText}
-        onChange={(e) => setMessageText(e.target.value)}
+        value={editableMessage || messageText}
+        onChange={handleChange}
         placeholder="Type your message"
       />
       <button type="submit">Send</button>

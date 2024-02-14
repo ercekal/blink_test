@@ -6,7 +6,7 @@ import "./MessageList.css";
 import { useRef, useEffect } from "react";
 
 const MessageList: React.FC = () => {
-  const { selectedConversation } = useConversationContext();
+  const { selectedConversation, selectMessage } = useConversationContext();
   const lastMessageRef = useRef<HTMLLIElement>(null);
 
   useEffect(() => {
@@ -32,9 +32,11 @@ const MessageList: React.FC = () => {
                 ? lastMessageRef
                 : null
             }
+            onClick={() => selectMessage(message.id)}
           >
             <p className="message-date">
-              {format(message.last_updated, "EEEE, dd MMM HH:mm:ss")}
+              {format(message.last_updated, "EEEE, dd MMM HH:mm:ss")}{" "}
+              <i>{message.edited && "Edited"}</i>
             </p>
             <p className="message-text">{message.text}</p>
           </li>

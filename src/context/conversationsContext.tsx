@@ -1,13 +1,16 @@
 import React, { createContext, useContext, useState, ReactNode } from "react";
-import { Conversation } from "../types";
+import { Conversation, Message } from "../types";
 import data from "../data/data.json";
 import sortData from "../utils/sortData";
 
 interface ConversationContextProps {
   conversations: Conversation[] | null;
   selectedConversation: Conversation | null;
+  selectedMessage: Message | null;
   selectConversation: (id: string) => void;
+  selectMessage: (id: string) => void;
   handleSendMessage: (text: string) => void;
+  handleEditMessage: (text: string) => void;
 }
 
 interface ConversationProviderProps {
@@ -28,11 +31,18 @@ export const ConversationProvider: React.FC<ConversationProviderProps> = ({
   );
   const [selectedConversation, setSelectedConversation] =
     useState<Conversation | null>(null);
+  const [selectedMessage, setSelectedMessage] = useState<Message | null>(null);
 
   const selectConversation = (id: string) => {
     const selectedConversation =
       conversations?.find((c: Conversation) => c.id === id) || null;
     setSelectedConversation(selectedConversation);
+  };
+
+  const selectMessage = (id: string) => {
+    const selectedMessage =
+      selectedConversation?.messages.find((m: Message) => m.id === id) || null;
+    setSelectedMessage(selectedMessage);
   };
 
   const handleSendMessage = (messageText: string) => {
@@ -62,11 +72,47 @@ export const ConversationProvider: React.FC<ConversationProviderProps> = ({
     );
   };
 
+  const handleEditMessage = (messageText: string) => {
+    if (!selectedMessage || !selectedConversation) return;
+
+    const updatedMessages = (selectedConversation.messages || []).map(
+      (message) =>
+        message.id === selectedMessage.id
+          ? {
+              ...message,
+              text: messageText,
+              edited: true,
+              last_updated: new Date().toISOString(),
+            }
+          : message
+    );
+
+    const updatedConversations = (conversations || []).map((conv) =>
+      conv.id === selectedConversation.id
+        ? { ...conv, messages: updatedMessages }
+        : conv
+    );
+
+    setConversations(updatedConversations);
+
+    setSelectedConversation((prevSelected) =>
+      prevSelected?.id === selectedConversation.id
+        ? {
+            ...prevSelected,
+            messages: updatedMessages,
+          }
+        : prevSelected
+    );
+  };
+
   const contextValue: ConversationContextProps = {
     conversations,
     selectedConversation,
+    selectedMessage,
+    selectMessage,
     selectConversation,
     handleSendMessage,
+    handleEditMessage,
   };
 
   return (
