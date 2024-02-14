@@ -1,3 +1,7 @@
+.message {
+  cursor: pointer;
+}
+
 .message-date {
   font-size: smaller;
   margin: 0;

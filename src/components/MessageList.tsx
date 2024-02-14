@@ -33,6 +33,7 @@ const MessageList: React.FC = () => {
                 : null
             }
             onClick={() => selectMessage(message.id)}
+            className="message"
           >
             <p className="message-date">
               {format(message.last_updated, "EEEE, dd MMM HH:mm:ss")}{" "}
