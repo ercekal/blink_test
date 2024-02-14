@@ -1,22 +1,20 @@
-import {
-  ConversationProvider,
-  useConversationContext,
-} from "./context/conversationsContext";
+import { ConversationProvider } from "./context/conversationsContext";
 import Conversations from "./components/Conversations";
 import MessageList from "./components/MessageList";
 import ReplySection from "./components/ReplySection";
 import "./App.css";
 
 function App() {
-  const { conversations } = useConversationContext();
-  console.log("conversations: ", conversations);
-
   return (
-    <div className="App">
+    <div className="app-container">
       <Conversations />
-      <div>
-        <MessageList />
-        <ReplySection />
+      <div className="right-section">
+        <div className="messages">
+          <MessageList />
+        </div>
+        <div className="reply ">
+          <ReplySection />
+        </div>
       </div>
     </div>
   );

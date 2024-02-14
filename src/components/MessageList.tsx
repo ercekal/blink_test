@@ -1,7 +1,8 @@
-import React from "react";
+import { format } from "date-fns";
 import { useConversationContext } from "../context/conversationsContext";
 import { Message } from "../types";
 import sortData from "../utils/sortData";
+import "./MessageList.css";
 
 const MessageList: React.FC = () => {
   const { selectedConversation } = useConversationContext();
@@ -14,12 +15,16 @@ const MessageList: React.FC = () => {
 
   return (
     <div>
-      {orderedMsgs.map((message: Message) => (
-        <div key={message.id}>
-          <p>{message.text}</p>
-          <p>Last Updated: {message.last_updated}</p>
-        </div>
-      ))}
+      <ul>
+        {orderedMsgs.map((message: Message) => (
+          <li key={message.id}>
+            <p className="message-date">
+              {format(message.last_updated, "EEEE, dd MMM HH:mm:ss")}
+            </p>
+            <p className="message-text">{message.text}</p>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };

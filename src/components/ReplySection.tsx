@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useConversationContext } from "../context/conversationsContext";
+import "./ReplySection.css";
 
 const ReplySection = () => {
   const [messageText, setMessageText] = useState<string>("");
@@ -13,17 +14,15 @@ const ReplySection = () => {
   };
 
   return (
-    <div>
-      <form onSubmit={handleFormSubmit}>
-        <input
-          type="text"
-          value={messageText}
-          onChange={(e) => setMessageText(e.target.value)}
-          placeholder="Type your message"
-        />
-        <button type="submit">Send</button>
-      </form>
-    </div>
+    <form onSubmit={handleFormSubmit} className="reply-section">
+      <input
+        type="text"
+        value={messageText}
+        onChange={(e) => setMessageText(e.target.value)}
+        placeholder="Type your message"
+      />
+      <button type="submit">Send</button>
+    </form>
   );
 };
 

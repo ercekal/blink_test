@@ -1,21 +1,19 @@
 import { useConversationContext } from "../context/conversationsContext";
 import { Conversation } from "../types";
-
-interface ConversationListProps {
-  conversations: Conversation[];
-  onSelectConversation: (id: string) => void;
-}
+import "./Conversations.css";
 
 const Conversations = () => {
   const { conversations, selectConversation } = useConversationContext();
 
   return (
     <div>
-      {conversations?.map((c: Conversation) => (
-        <h1 key={c.id} onClick={() => selectConversation(c.id)}>
-          {c.name}
-        </h1>
-      ))}
+      <ul>
+        {conversations?.map((c: Conversation) => (
+          <li key={c.id} onClick={() => selectConversation(c.id)}>
+            <h1>{c.name}</h1>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };
