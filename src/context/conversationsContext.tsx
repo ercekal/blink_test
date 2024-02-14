@@ -3,15 +3,19 @@ import { Conversation } from "../types";
 import data from "../data/data.json";
 import sortData from "../utils/sortData";
 
-interface DataContextProps {
+interface ConversationContextProps {
   conversations: Conversation[] | null;
+  selectedConversation: Conversation | null;
+  selectConversation: (id: string) => void;
 }
 
 interface ConversationProviderProps {
   children: ReactNode;
 }
 
-const DataContext = createContext<DataContextProps | undefined>(undefined);
+const DataContext = createContext<ConversationContextProps | undefined>(
+  undefined
+);
 
 export const ConversationProvider: React.FC<ConversationProviderProps> = ({
   children,
@@ -19,11 +23,23 @@ export const ConversationProvider: React.FC<ConversationProviderProps> = ({
   const [conversations, setConversations] = useState<Conversation[] | null>(
     sortData(data, "last_updated").reverse()
   );
+  const [selectedConversation, setSelectedConversation] =
+    useState<Conversation | null>(null);
+
+  const selectConversation = (id: string) => {
+    const selectedConversation =
+      conversations?.find((c: Conversation) => c.id === id) || null;
+    setSelectedConversation(selectedConversation);
+  };
+
+  const contextValue: ConversationContextProps = {
+    conversations,
+    selectedConversation,
+    selectConversation,
+  };
 
   return (
-    <DataContext.Provider value={{ conversations }}>
-      {children}
-    </DataContext.Provider>
+    <DataContext.Provider value={contextValue}>{children}</DataContext.Provider>
   );
 };
 

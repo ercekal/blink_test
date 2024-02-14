@@ -1,5 +1,12 @@
 const ReplySection = () => {
-  return <div></div>;
+  return (
+    <div>
+      <form>
+        <input type="text" />
+        <button type="submit">Enter</button>
+      </form>
+    </div>
+  );
 };
 
 export default ReplySection;
